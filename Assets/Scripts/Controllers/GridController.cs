@@ -4,36 +4,50 @@ using UnityEngine;
 
 public class GridController : MonoBehaviour
 {
-    [SerializeField] private int _gridSizeX = 0;
-    [SerializeField] private int _gridSizeY = 0;
+    [SerializeField] GridView _gridView = null;
     HashSet<Vector2Int> _liveAdjecentTiles = null;
 
     private bool[,] _gameOfLifeGrid = null;
+    private int _gridSizeX = 0;
+    private int _gridSizeY = 0;
+
     private float _tickTime = 1f;
     private float _currentTickTime = 0f;
+
+    private bool _gridInitialized = false;
+    private bool _simulating = false;
+    public bool GridInitialized => _gridInitialized;
 
     public void Initialize()
     {
         _tickTime = GameConfigScriptableObject.Instance.TickTime;
-        InitializeGrid();
     }
 
-    public void InitializeGrid()
+    public void InitializeGrid(int sizeX, int sizeY)
     {
-        _gameOfLifeGrid = new bool[_gridSizeX, _gridSizeY];
+        _gridSizeX = sizeX;
+        _gridSizeY = sizeY;
+        _gameOfLifeGrid = new bool[sizeX, sizeY];
+        _gridView.InitializeGrid(sizeX, sizeY);
+        _gridInitialized = true;
     }
 
-    public void ResizeGrid()
+    public void ResizeGrid(int sizeX, int sizeY)
     {
-
+        _gridSizeX = sizeX;
+        _gridSizeY = sizeY;
+        _gameOfLifeGrid = new bool[sizeX, sizeY];
+        _gridView.ResizeField(sizeX, sizeY);
     }
 
     public void ClearGrid()
     {
+        _gridView.Clear();
     }
 
     public void StartSimulation()
     {
+        _simulating = true;
     }
 
     private void Tick()
@@ -47,7 +61,17 @@ public class GridController : MonoBehaviour
             if (_nextTick[tile.x, tile.y]) AddLiveAdjecentTiles(liveAdjecentTilesNext, tile);
         }
 
-        _liveAdjecentTiles = liveAdjecentTilesNext;
+        _gameOfLifeGrid = _nextTick;
+
+        if (_liveAdjecentTiles.SetEquals(liveAdjecentTilesNext))
+        {
+            _simulating = false;
+        }
+        else
+        {
+            _liveAdjecentTiles = liveAdjecentTilesNext;
+            _gridView.SetActiveFields(_gameOfLifeGrid, _gridSizeX, _gridSizeY);
+        }
     }
 
     private bool CheckNeighbours(int x, int y)
@@ -80,7 +104,7 @@ public class GridController : MonoBehaviour
 
     private void Update()
     {
-        if (_currentTickTime > _tickTime)
+        if (_simulating && _currentTickTime > _tickTime)
         {
             Tick();
             _currentTickTime -= _tickTime;
