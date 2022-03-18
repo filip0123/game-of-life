@@ -9,7 +9,6 @@ public class GridView : MonoBehaviour
     [SerializeField] Transform _bottomLeft = null;
     [SerializeField] Transform _topRight = null;
 
-    List<GridTileView> _activeTiles = null;
     List<List<GridTileView>> _allTiles = null;
 
     private float _tileSize = 0f;
@@ -36,7 +35,6 @@ public class GridView : MonoBehaviour
 
         ScaleTiles();
         PositionTiles();
-        _initialized = true;
     }
 
     public void ResizeField(int sizeX, int sizeY)
@@ -67,26 +65,24 @@ public class GridView : MonoBehaviour
 
     public void SetActiveFields(bool[,] logicGrid, int gridSizeX, int gridSizeY)
     {
-        _activeTiles.Clear();
-
         for (int x = 0; x < gridSizeX; ++x)
         {
             for (int y = 0; y < gridSizeY; ++y)
             {
                 _allTiles[x][y].SetLive(logicGrid[x, y]);
-                _activeTiles.Add(_allTiles[x][y]);
             }
         }
     }
 
     public void Clear()
     {
-        foreach (GridTileView grid in _activeTiles)
+        foreach (List<GridTileView> column in _allTiles)
         {
-            grid.SetLive(false);
+            foreach (GridTileView grid in column)
+            {
+                grid.SetLive(false);
+            }
         }
-
-        _activeTiles.Clear();
     }
 
     private void ScaleTiles()

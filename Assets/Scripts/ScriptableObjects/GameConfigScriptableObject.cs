@@ -19,6 +19,11 @@ public class GameConfigScriptableObject : ScriptableObject
     [SerializeField] private GridTileView _tilePrefab = null;
     [SerializeField] private float _tickTime = 0f;
 
+    [SerializeField] private bool _doRandomStart = false;
+    [SerializeField] private int _randomPercentage = 0;
+
     public GridTileView TilePrefab => _tilePrefab;
     public float TickTime => _tickTime;
+    public bool DoRandomStart => _doRandomStart;
+    public int RandomPercentage => _randomPercentage;
 }

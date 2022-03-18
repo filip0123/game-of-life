@@ -21,6 +21,7 @@ public class GridController : MonoBehaviour
     public void Initialize()
     {
         _tickTime = GameConfigScriptableObject.Instance.TickTime;
+        _liveAdjecentTiles = new HashSet<Vector2Int>();
     }
 
     public void InitializeGrid(int sizeX, int sizeY)
@@ -30,6 +31,10 @@ public class GridController : MonoBehaviour
         _gameOfLifeGrid = new bool[sizeX, sizeY];
         _gridView.InitializeGrid(sizeX, sizeY);
         _gridInitialized = true;
+
+        if (GameConfigScriptableObject.Instance.DoRandomStart) RandomizeGrid();
+
+        _gridView.SetActiveFields(_gameOfLifeGrid,sizeX,sizeY);
     }
 
     public void ResizeGrid(int sizeX, int sizeY)
@@ -38,6 +43,10 @@ public class GridController : MonoBehaviour
         _gridSizeY = sizeY;
         _gameOfLifeGrid = new bool[sizeX, sizeY];
         _gridView.ResizeField(sizeX, sizeY);
+
+        if (GameConfigScriptableObject.Instance.DoRandomStart) RandomizeGrid();
+
+        _gridView.SetActiveFields(_gameOfLifeGrid, sizeX, sizeY);
     }
 
     public void ClearGrid()
@@ -79,10 +88,10 @@ public class GridController : MonoBehaviour
         int liveCount = 0;
         for (int i = x - 1; i <= x + 1; ++i)
         {
-            if (x < 0 || x > _gridSizeX) continue;
+            if (i < 0 || i >= _gridSizeX) continue;
             for (int j = y - 1; j <= y + 1; ++j)
             {
-                if (j < 0 || j > _gridSizeY || i == x && j == y) continue;
+                if (j < 0 || j >= _gridSizeY || i == x && j == y) continue;
                 else if (_gameOfLifeGrid[i, j]) ++liveCount;
             }
         }
@@ -101,13 +110,34 @@ public class GridController : MonoBehaviour
             }
         }
     }
+    private void RandomizeGrid()
+    {
+        int randomChance = GameConfigScriptableObject.Instance.RandomPercentage;
+        
+        for(int x = 0; x < _gridSizeX; ++x)
+        {
+            for(int y = 0; y < _gridSizeY; ++y)
+            {
+                bool isLive = Random.Range(0, 100) < randomChance;
+                _gameOfLifeGrid[x, y] = isLive;
+                if (isLive) AddLiveAdjecentTiles(_liveAdjecentTiles, new Vector2Int(x,y));
+            }
+        }
+    }
 
     private void Update()
     {
-        if (_simulating && _currentTickTime > _tickTime)
+        if (_simulating)
         {
-            Tick();
-            _currentTickTime -= _tickTime;
+            if (_currentTickTime > _tickTime)
+            {
+                Tick();
+                _currentTickTime -= _tickTime;
+            }
+            else
+            {
+                _currentTickTime += Time.deltaTime;
+            }
         }
     }
 }

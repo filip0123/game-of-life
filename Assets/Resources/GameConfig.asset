@@ -13,3 +13,6 @@ MonoBehaviour:
   m_Name: GameConfig
   m_EditorClassIdentifier: 
   _tilePrefab: {fileID: 2697430939312874488, guid: f2cd33c314f40c64288c04efb28daedd, type: 3}
+  _tickTime: 0.15
+  _doRandomStart: 1
+  _randomPercentage: 15
