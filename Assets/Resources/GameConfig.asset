@@ -16,3 +16,5 @@ MonoBehaviour:
   _tickTime: 0.15
   _doRandomStart: 1
   _randomPercentage: 15
+  _defaultX: 50
+  _defaultY: 50
