@@ -37,25 +37,62 @@ public class GridView : MonoBehaviour
         PositionTiles();
     }
 
-    public void ResizeField(int sizeX, int sizeY)
+    public void ResizeField(int newSizeX, int newSizeY)
     {
+        if (newSizeX < 2 || newSizeY < 2) throw new UnityException("Grid too small for game!");
         if (_allTiles == null) throw new UnityException("No original to resize!");
 
-        if (sizeX < _currentSizeX) _allTiles.RemoveRange(sizeX, _currentSizeX - sizeX);
+        int sizeX = _currentSizeX;
+        int sizeY = _currentSizeY;
 
-        if (sizeY < _currentSizeY)
+        if (newSizeX < sizeX)
+        {
+            for (int i = newSizeX; i < sizeX; ++i)
+            {
+                foreach (GridTileView tile in _allTiles[i])
+                {
+                    Destroy(tile.gameObject);
+                }
+            }
+            _allTiles.RemoveRange(newSizeX, sizeX - newSizeX);
+            sizeX = newSizeX;
+        }
+
+        if (newSizeY < sizeY)
         {
             foreach (List<GridTileView> column in _allTiles)
             {
-                column.RemoveRange(sizeY, _currentSizeY - sizeY);
+                for (int i = newSizeY; i < sizeY; ++i)
+                {
+                    Destroy(column[i].gameObject);
+                }
+                column.RemoveRange(newSizeY, sizeY - newSizeY);
+            }
+            sizeY = newSizeY;
+        }
+
+        if (newSizeX > sizeX)
+        {
+            for (int x = sizeX; x < newSizeX; ++x)
+            {
+                List<GridTileView> currentColumn = new List<GridTileView>();
+                for (int y = 0; y < sizeY; ++y)
+                {
+                    currentColumn.Add(Instantiate(_gridTilePrefab, transform));
+                }
+                _allTiles.Add(currentColumn);
             }
         }
 
-        if (sizeY > _currentSizeY)
+        if (newSizeY > sizeY)
         {
+            int newRows = newSizeY - sizeY;
             foreach (List<GridTileView> column in _allTiles)
             {
-                column.RemoveRange(sizeY, _currentSizeY - sizeY);
+                for (int i = 0; i < newRows; ++i)
+                {
+                    column.Add(Instantiate(_gridTilePrefab, transform));
+                }
             }
         }
 
@@ -105,7 +142,7 @@ public class GridView : MonoBehaviour
 
     private void PositionTiles()
     {
-        Vector3 startPos = new Vector3(-_tileSize * _currentSizeX / 2f, -_tileSize * _currentSizeY / 2f); //startPos = topLeft corner of full grid
+        Vector3 startPos = new Vector3(-_tileSize * _currentSizeX / 2f, -_tileSize * _currentSizeY / 2f); //startPos = botLeft corner of full grid
 
         float currentPosX = startPos.x;
         float currentPosY;
@@ -113,9 +150,9 @@ public class GridView : MonoBehaviour
         foreach (List<GridTileView> column in _allTiles)
         {
             currentPosY = startPos.y;
-            foreach (GridTileView grid in column)
+            foreach (GridTileView tile in column)
             {
-                grid.transform.position = new Vector3(currentPosX, currentPosY, 0f);
+                tile.transform.position = new Vector3(currentPosX, currentPosY, 0f);
                 currentPosY += _tileSize;
             }
             currentPosX += _tileSize;

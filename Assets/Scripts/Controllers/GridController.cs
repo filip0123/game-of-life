@@ -18,6 +18,8 @@ public class GridController : MonoBehaviour
     private bool _simulating = false;
     public bool GridInitialized => _gridInitialized;
 
+    public bool Simulating => _simulating;
+
     public void Initialize()
     {
         _tickTime = GameConfigScriptableObject.Instance.TickTime;
@@ -32,9 +34,7 @@ public class GridController : MonoBehaviour
         _gridView.InitializeGrid(sizeX, sizeY);
         _gridInitialized = true;
 
-        if (GameConfigScriptableObject.Instance.DoRandomStart) RandomizeGrid();
-
-        _gridView.SetActiveFields(_gameOfLifeGrid,sizeX,sizeY);
+        SetSimulation();
     }
 
     public void ResizeGrid(int sizeX, int sizeY)
@@ -44,19 +44,23 @@ public class GridController : MonoBehaviour
         _gameOfLifeGrid = new bool[sizeX, sizeY];
         _gridView.ResizeField(sizeX, sizeY);
 
-        if (GameConfigScriptableObject.Instance.DoRandomStart) RandomizeGrid();
-
-        _gridView.SetActiveFields(_gameOfLifeGrid, sizeX, sizeY);
-    }
-
-    public void ClearGrid()
-    {
-        _gridView.Clear();
+        SetSimulation();
     }
 
     public void StartSimulation()
     {
         _simulating = true;
+    }
+
+    public void SetSimulation()
+    {
+        _simulating = false;
+        _liveAdjecentTiles.Clear();
+        _currentTickTime = 0f;
+
+        if (GameConfigScriptableObject.Instance.DoRandomStart) RandomizeGrid();
+
+        _gridView.SetActiveFields(_gameOfLifeGrid, _gridSizeX, _gridSizeY);
     }
 
     private void Tick()
