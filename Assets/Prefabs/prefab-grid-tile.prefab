@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2697430939312874491}
   - component: {fileID: 2697430939312874490}
   - component: {fileID: 2697430939312874488}
+  - component: {fileID: 1094314905160784675}
   m_Layer: 0
   m_Name: prefab-grid-tile
   m_TagString: Untagged
@@ -95,3 +96,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _object: {fileID: 2697430939312874490}
+--- !u!64 &1094314905160784675
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2697430939312874495}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 24
+  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
