@@ -13,9 +13,8 @@ public class UIController : MonoBehaviour
     [SerializeField] Button _buttonRestartSimulation = null;
     [SerializeField] GridController _gridController; 
     
-    private void Awake()
+    public void Initialize()
     {
-        _gridController.Initialize();
         _buttonInitializeField.onClick.AddListener(OnInitializeField);
         _buttonStartSimulation.onClick.AddListener(OnStartSimulation);
         _buttonRestartSimulation.onClick.AddListener(SetSimulation);
