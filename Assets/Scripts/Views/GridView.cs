@@ -28,7 +28,9 @@ public class GridView : MonoBehaviour
             List<GridTileView> currentColumn = new List<GridTileView>();
             for (int y = 0; y < sizeY; ++y)
             {
-                currentColumn.Add(Instantiate(_gridTilePrefab, transform));
+                GridTileView tile = Instantiate(_gridTilePrefab, transform);
+                tile.SetPosition(x, y);
+                currentColumn.Add(tile);
             }
             _allTiles.Add(currentColumn);
         }
@@ -78,7 +80,9 @@ public class GridView : MonoBehaviour
                 List<GridTileView> currentColumn = new List<GridTileView>();
                 for (int y = 0; y < sizeY; ++y)
                 {
-                    currentColumn.Add(Instantiate(_gridTilePrefab, transform));
+                    GridTileView tile = Instantiate(_gridTilePrefab, transform);
+                    tile.SetPosition(x, y);
+                    currentColumn.Add(tile);
                 }
                 _allTiles.Add(currentColumn);
             }
@@ -87,11 +91,13 @@ public class GridView : MonoBehaviour
         if (newSizeY > sizeY)
         {
             int newRows = newSizeY - sizeY;
-            foreach (List<GridTileView> column in _allTiles)
+            for (int x = 0; x < _allTiles.Count; ++x)
             {
-                for (int i = 0; i < newRows; ++i)
+                for (int y = 0; y < newRows; ++y)
                 {
-                    column.Add(Instantiate(_gridTilePrefab, transform));
+                    GridTileView tile = Instantiate(_gridTilePrefab, transform);
+                    tile.SetPosition(x, y);
+                    _allTiles[x].Add(tile);
                 }
             }
         }
@@ -100,7 +106,7 @@ public class GridView : MonoBehaviour
         PositionTiles();
     }
 
-    public void SetActiveFields(bool[,] logicGrid, int gridSizeX, int gridSizeY)
+    public void SetActiveFields(ref bool[,] logicGrid, int gridSizeX, int gridSizeY)
     {
         for (int x = 0; x < gridSizeX; ++x)
         {

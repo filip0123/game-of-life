@@ -60,7 +60,7 @@ public class GridController : MonoBehaviour
 
         if (GameConfigScriptableObject.Instance.DoRandomStart) RandomizeGrid();
 
-        _gridView.SetActiveFields(_gameOfLifeGrid, _gridSizeX, _gridSizeY);
+        _gridView.SetActiveFields(ref _gameOfLifeGrid, _gridSizeX, _gridSizeY);
     }
 
     private void Tick()
@@ -83,7 +83,7 @@ public class GridController : MonoBehaviour
         else
         {
             _liveAdjecentTiles = liveAdjecentTilesNext;
-            _gridView.SetActiveFields(_gameOfLifeGrid, _gridSizeX, _gridSizeY);
+            _gridView.SetActiveFields(ref _gameOfLifeGrid, _gridSizeX, _gridSizeY);
         }
     }
 
