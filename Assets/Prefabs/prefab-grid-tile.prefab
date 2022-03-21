@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2697430939312874490}
   - component: {fileID: 2697430939312874488}
   - component: {fileID: 1094314905160784675}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: prefab-grid-tile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
