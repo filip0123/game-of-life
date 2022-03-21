@@ -9,27 +9,46 @@ public class ShapeModel
     [SerializeField] private ShapeType _shapeType;
     [SerializeField] private string _shapeName = null;
     [SerializeField] private Sprite _cardImage = null;
-    [SerializeField][TextArea(1, 20)] private String _tileArrangement = null;
+    [SerializeField] [TextArea(1, 20)] private String _tileArrangement = null;
+
+    private bool[,] _logicalTileArrangement = null;
+    private int _sizeX = 0;
+    private int _sizeY = 0;
+
+    public bool[,] LogicalTileArrangement
+    {
+        get
+        {
+            if (_logicalTileArrangement == null) _logicalTileArrangement = getLogicalTileArrangement();
+            return _logicalTileArrangement;
+        }
+    }
+
+    public int SizeX => _sizeX;
+    public int SizeY => _sizeY;
 
     public ShapeType ShapeType => _shapeType;
     public string ShapeName => _shapeName;
     public Sprite CardImage => _cardImage;
 
+
+
+
     /// <summary>
     /// Transforms tileArrangment string into bool[,] by setting Os as false and Xs as true
     /// </summary>
     /// <returns></returns>
-    public bool[,] getLogicalShape()
+    private bool[,] getLogicalTileArrangement()
     {
         bool singleRow = _tileArrangement.IndexOf('\n') > 0;
-        int sizeX = singleRow ? _tileArrangement.IndexOf('\n') : _tileArrangement.Length;
+        _sizeX = singleRow ? _tileArrangement.IndexOf('\n') : _tileArrangement.Length;
 
         //off by 1 because of newline chars
-        if (!singleRow && (_tileArrangement.Length + 1) % (sizeX + 1) != 0) throw new Exception("Shape grid is not square!");
+        if (!singleRow && (_tileArrangement.Length + 1) % (_sizeX + 1) != 0) throw new Exception("Shape grid is not square!");
 
-        int sizeY = (_tileArrangement.Length + 1) / (sizeX + 1);
+        _sizeY = (_tileArrangement.Length + 1) / (_sizeX + 1);
 
-        bool[,] toReturn = new bool[sizeX, sizeY];
+        bool[,] toReturn = new bool[_sizeX, _sizeY];
 
         int x = 0;
         int y = 0;
@@ -57,11 +76,4 @@ public class ShapeModel
 
         return toReturn;
     }
-}
-
-public enum ShapeType
-{
-    StillLife = 1,
-    Oscillator = 2,
-    Spaceship = 3,
 }
