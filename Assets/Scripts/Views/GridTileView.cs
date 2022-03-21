@@ -22,11 +22,16 @@ public class GridTileView : MonoBehaviour
 
     private void Show()
     {
-        _object.enabled = true;
+        _object.material = GameConfigScriptableObject.Instance.MaterialLive;
     }
 
     private void Hide()
     {
-        _object.enabled = false;
+        _object.material = null;
+    }
+
+    private void Select()
+    {
+        _object.material = GameConfigScriptableObject.Instance.MaterialSelected;
     }
 }

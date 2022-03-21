@@ -23,10 +23,15 @@ public class GameConfigScriptableObject : ScriptableObject
     [SerializeField] private int _defaultX = 4;
     [SerializeField] private int _defaultY = 4;
 
+    [SerializeField] Material _materialSelected = null;
+    [SerializeField] Material _materialLive = null;
+
     public GridTileView TilePrefab => _tilePrefab;
     public float TickTime => _tickTime;
     public bool DoRandomStart => _doRandomStart;
     public int RandomPercentage => _randomPercentage;
     public int DefaultX => _defaultX;
     public int DefaultY => _defaultY;
+    public Material MaterialSelected => _materialSelected;
+    public Material MaterialLive => _materialLive;
 }
