@@ -129,6 +129,43 @@ public class GridController : MonoBehaviour
         }
     }
 
+    public bool CanSetShape(Vector2Int targetTile, bool[,] tileShape, int tileShapeSizeX, int tileShapeSizeY)
+    {
+        int gridX = 0;
+        int gridY = 0;
+
+        for (int x = 0; x < tileShapeSizeX; ++x)
+        {
+            gridX = targetTile.x + x;
+            if (gridX == _gridSizeX) return false;
+            for (int y = 0; y < tileShapeSizeY ; ++y)
+            {
+                if (gridY == _gridSizeY) return false;
+                if (tileShape[x, y])
+                {
+                    if (_gameOfLifeGrid[gridX, gridY]) return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public void SetShape(Vector2Int targetTile, bool[,] tileShape, int tileShapeSizeX, int tileShapeSizeY)
+    {
+        int gridX = 0;
+        int gridY = 0;
+
+        for (int x = 0; x < tileShapeSizeX; ++x)
+        {
+            gridX = targetTile.x + x;
+            for (int y = 0; y < tileShapeSizeY; ++y)
+            {
+                _gameOfLifeGrid[gridX, gridY] = tileShape[x, y];
+            }
+        }
+    }
+
     private void Update()
     {
         if (_simulating)
