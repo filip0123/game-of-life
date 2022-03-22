@@ -14,7 +14,7 @@ public class RaycastResolver
 
         if (Physics.Raycast(ray, out RaycastHit hit, 100f, layerMask))
         {
-            if (_raycastHit == null && hit.transform != _raycastHit) _raycastHit = hit.transform;
+            if (_raycastHit == null || hit.transform != _raycastHit) _raycastHit = hit.transform;
         }
         else
         {

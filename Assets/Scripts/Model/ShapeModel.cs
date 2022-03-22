@@ -63,7 +63,8 @@ public class ShapeModel
             {
                 toReturn[x, y] = true;
             }
-            else if (character.Equals('\n'))
+            
+            if (character.Equals('\n'))
             {
                 y++;
                 x = 0;
