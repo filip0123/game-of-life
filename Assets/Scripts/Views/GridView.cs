@@ -106,13 +106,13 @@ public class GridView : MonoBehaviour
         PositionTiles();
     }
 
-    public void SetActiveFields(ref bool[,] logicGrid, int gridSizeX, int gridSizeY)
+    public void SetActiveFields(ref int[,] logicGrid, int gridSizeX, int gridSizeY)
     {
         for (int x = 0; x < gridSizeX; ++x)
         {
             for (int y = 0; y < gridSizeY; ++y)
             {
-                _allTiles[x][y].SetLive(logicGrid[x, y]);
+                _allTiles[x][y].SetState(logicGrid[x, y]);
             }
         }
     }
@@ -123,7 +123,7 @@ public class GridView : MonoBehaviour
         {
             foreach (GridTileView grid in column)
             {
-                grid.SetLive(false);
+                grid.SetState(0);
             }
         }
     }

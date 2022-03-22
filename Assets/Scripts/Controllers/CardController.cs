@@ -64,17 +64,23 @@ public class CardController : MonoBehaviour
 
     private void PreviewSelected()
     {
+        _gridController.ClearPreviews();
 
+        if (_gridController.CanSetShape(_selectedTile.Position, _selectedCardView.Shape.LogicalTileArrangement, _selectedCardView.Shape.SizeX, _selectedCardView.Shape.SizeY))
+        {
+            _gridController.PreviewShape(_selectedTile.Position, _selectedCardView.Shape.LogicalTileArrangement, _selectedCardView.Shape.SizeX, _selectedCardView.Shape.SizeY);
+        }
     }
 
     private void Update()
     {
-        if (_dragging)
+        if (_dragging || _gridShapeForm)
         {
             Transform raycast = RaycastResolver.GetRaycastTransform(Layer.Tile);
-            if(raycast != null && (_selectedTile == null || raycast != _selectedTile.transform))
+            if (raycast != null && (_selectedTile == null || raycast != _selectedTile.transform))
             {
                 _selectedTile = raycast.GetComponent<GridTileView>();
+                PreviewSelected();
                 CardViewToGridShape();
             }
             else if (raycast == null)
@@ -83,11 +89,8 @@ public class CardController : MonoBehaviour
             }
 
             _selectedCardView.transform.position = Input.mousePosition;
-        }
 
-        if(_dragging && _gridShapeForm)
-        {
-
+            if (_gridShapeForm && Input.GetMouseButtonUp(0)) Place();
         }
     }
 }

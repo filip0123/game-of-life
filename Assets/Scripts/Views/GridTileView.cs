@@ -14,10 +14,20 @@ public class GridTileView : MonoBehaviour
         _positionY = y;
     }
 
-    public void SetLive(bool isLive)
+    public void SetState(int state)
     {
-        if (isLive) Show();
-        else Hide();
+        switch((TileState)state)
+        {
+            case TileState.empty:
+                Hide();
+                break;
+            case TileState.live: 
+                Show();
+                break;
+            case TileState.selected:
+                Select();
+                break;
+        }
     }
 
     private void Show()
