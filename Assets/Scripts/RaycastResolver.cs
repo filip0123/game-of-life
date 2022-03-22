@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RaycastResolver : MonoBehaviour
+public class RaycastResolver
 {
     public static Transform _raycastHit = null;
 
@@ -10,7 +10,9 @@ public class RaycastResolver : MonoBehaviour
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        if (Physics.Raycast(ray, out RaycastHit hit, 100.0f, (int)layer))
+        int layerMask = 1 << (int)layer;
+
+        if (Physics.Raycast(ray, out RaycastHit hit, 100f, layerMask))
         {
             if (_raycastHit == null && hit.transform != _raycastHit) _raycastHit = hit.transform;
         }

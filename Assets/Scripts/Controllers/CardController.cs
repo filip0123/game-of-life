@@ -8,7 +8,7 @@ public class CardController : MonoBehaviour
     private Camera _main = null;
     private CardView _selectedCardView = null;
     private bool _dragging = false;
-    private bool _hoveringOverGrid = false;
+    private bool _gridShapeForm = false;
 
     private GridTileView _selectedTile = null;
 
@@ -35,22 +35,26 @@ public class CardController : MonoBehaviour
         _selectedCardView = null;
         _dragging = false;
 
-        if (_hoveringOverGrid) Place();
+        if (_gridShapeForm) Place();
     }
 
-    public void CardViewToGridShape()
+    private void CardViewToGridShape()
     {
-        _hoveringOverGrid = true;
+        if (_gridShapeForm) return;
+
+        _gridShapeForm = true;
         _selectedCardView.gameObject.SetActive(false);
     }
 
-    public void GridShapeToCardView()
+    private void GridShapeToCardView()
     {
-        _hoveringOverGrid = false;
+        if (!_gridShapeForm) return;
+
+        _gridShapeForm = false;
         _selectedCardView.gameObject.SetActive(true);
     }
 
-    public void Place()
+    private void Place()
     {
         if (_gridController.CanSetShape(_selectedTile.Position, _selectedCardView.Shape.LogicalTileArrangement, _selectedCardView.Shape.SizeX, _selectedCardView.Shape.SizeY))
         {
@@ -58,17 +62,32 @@ public class CardController : MonoBehaviour
         }
     }
 
+    private void PreviewSelected()
+    {
+
+    }
+
     private void Update()
     {
-        if(_dragging)
+        if (_dragging)
         {
             Transform raycast = RaycastResolver.GetRaycastTransform(Layer.Tile);
-            if(raycast != null && _selectedTile == null || raycast != _selectedTile.transform)
+            if(raycast != null && (_selectedTile == null || raycast != _selectedTile.transform))
             {
                 _selectedTile = raycast.GetComponent<GridTileView>();
+                CardViewToGridShape();
+            }
+            else if (raycast == null)
+            {
+                GridShapeToCardView();
             }
 
             _selectedCardView.transform.position = Input.mousePosition;
+        }
+
+        if(_dragging && _gridShapeForm)
+        {
+
         }
     }
 }
