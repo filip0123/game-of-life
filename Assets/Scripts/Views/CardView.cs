@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.EventSystems;
 
-public class CardView : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+public class CardView : MonoBehaviour, IPointerDownHandler
 {
     [SerializeField] private TextMeshProUGUI _nameText = null;
     [SerializeField] private Image _image = null;
@@ -24,10 +24,5 @@ public class CardView : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public void OnPointerDown(PointerEventData data)
     {
         _cardController.StartDrag(this);
-    }
-
-    public void OnPointerUp(PointerEventData eventData)
-    {
-        _cardController.StopDragging();
     }
 }

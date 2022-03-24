@@ -169,7 +169,8 @@ public class GridController : MonoBehaviour
             for (int y = 0; y < tileShapeSizeY; ++y)
             {
                 gridY = targetTile.y + y;
-                _gameOfLifeGrid[gridX, gridY] = tileShape[x, y] ? _STATE_LIVE : _STATE_EMPTY;
+                _gameOfLifeGrid[gridX, gridY] = tileShape[x, y] ? _STATE_LIVE : _gameOfLifeGrid[gridX, gridY];
+                if(_gameOfLifeGrid[gridX, gridY] == _STATE_LIVE) AddLiveAdjecentTiles(_liveAdjecentTiles, new Vector2Int(gridX, gridY));
             }
         }
 

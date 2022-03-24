@@ -18,3 +18,5 @@ MonoBehaviour:
   _randomPercentage: 15
   _defaultX: 50
   _defaultY: 50
+  _materialSelected: {fileID: 2100000, guid: db875c0040df91b4eac717a93719b250, type: 2}
+  _materialLive: {fileID: 2100000, guid: 4e13b31cd0c348b4292b23230f293465, type: 2}

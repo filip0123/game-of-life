@@ -31,66 +31,78 @@ public class CardController : MonoBehaviour
 
     public void StopDragging()
     {
-        _selectedCardView.transform.position = _originalPosition;
-        _selectedCardView = null;
-        _dragging = false;
-
-        if (_gridShapeForm) Place();
+        if (_gridShapeForm && CanPlace()) Place();
+        else ResetCard();
     }
 
     private void CardViewToGridShape()
     {
-        if (_gridShapeForm) return;
-
         _gridShapeForm = true;
         _selectedCardView.gameObject.SetActive(false);
     }
 
     private void GridShapeToCardView()
     {
-        if (!_gridShapeForm) return;
-
+        _gridController.ClearPreviews();
         _gridShapeForm = false;
         _selectedCardView.gameObject.SetActive(true);
     }
 
+    private void ResetCard()
+    {
+        _selectedCardView.transform.position = _originalPosition;
+        _selectedCardView.gameObject.SetActive(true);
+        _selectedCardView = null;
+        _dragging = false;
+        _gridShapeForm = false;
+    }
+
     private void Place()
     {
-        if (_gridController.CanSetShape(_selectedTile.Position, _selectedCardView.Shape.LogicalTileArrangement, _selectedCardView.Shape.SizeX, _selectedCardView.Shape.SizeY))
-        {
-            _gridController.SetShape(_selectedTile.Position, _selectedCardView.Shape.LogicalTileArrangement, _selectedCardView.Shape.SizeX, _selectedCardView.Shape.SizeY);
-        }
+        _gridController.SetShape(_selectedTile.Position, _selectedCardView.Shape.LogicalTileArrangement, _selectedCardView.Shape.SizeX, _selectedCardView.Shape.SizeY);
+
+        Destroy(_selectedCardView);
+        _selectedCardView = null;
+        _dragging = false;
+        _gridShapeForm = false;
     }
 
     private void PreviewSelected()
     {
         _gridController.ClearPreviews();
 
-        if (_gridController.CanSetShape(_selectedTile.Position, _selectedCardView.Shape.LogicalTileArrangement, _selectedCardView.Shape.SizeX, _selectedCardView.Shape.SizeY))
+        if (CanPlace())
         {
             _gridController.PreviewShape(_selectedTile.Position, _selectedCardView.Shape.LogicalTileArrangement, _selectedCardView.Shape.SizeX, _selectedCardView.Shape.SizeY);
         }
     }
 
+    private bool CanPlace()
+    {
+        return _gridController.CanSetShape(_selectedTile.Position, _selectedCardView.Shape.LogicalTileArrangement, _selectedCardView.Shape.SizeX, _selectedCardView.Shape.SizeY);
+    }
+
     private void Update()
     {
-        if (_dragging || _gridShapeForm)
+        if (_dragging)
         {
+
             Transform raycast = RaycastResolver.GetRaycastTransform(Layer.Tile);
             if (raycast != null && (_selectedTile == null || raycast != _selectedTile.transform))
             {
+                if (!_gridShapeForm) CardViewToGridShape();
+
                 _selectedTile = raycast.GetComponent<GridTileView>();
                 PreviewSelected();
-                CardViewToGridShape();
             }
-            else if (raycast == null)
+            else if (raycast == null && _gridShapeForm)
             {
                 GridShapeToCardView();
             }
 
             _selectedCardView.transform.position = Input.mousePosition;
 
-            if (_gridShapeForm && Input.GetMouseButtonUp(0)) Place();
+            if (Input.GetMouseButtonUp(0)) StopDragging();
         }
     }
 }

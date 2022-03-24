@@ -51,7 +51,7 @@ public class ShapeModel
         bool[,] toReturn = new bool[_sizeX, _sizeY];
 
         int x = 0;
-        int y = 0;
+        int y = _sizeY - 1;
 
         foreach (char character in _tileArrangement)
         {
@@ -66,7 +66,7 @@ public class ShapeModel
             
             if (character.Equals('\n'))
             {
-                y++;
+                y--;
                 x = 0;
             }
             else
