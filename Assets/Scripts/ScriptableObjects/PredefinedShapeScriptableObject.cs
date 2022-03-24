@@ -32,4 +32,9 @@ public class PredefinedShapeScriptableObject : ScriptableObject
     {
         return _shapes.ElementAt(Random.Range(0, _shapes.Length));
     }
+
+    public ShapeModel GetModelById(int id)
+    {
+        return _shapes.FirstOrDefault(x => x.ID == id);
+    }
 }

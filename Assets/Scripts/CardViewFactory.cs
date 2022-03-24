@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class CardViewFactory : MonoBehaviour
 {
-    [SerializeField] private CardController _cardController = null;
-    public CardView Create(ShapeModel shape, Transform parent)
+    public CardView Create(ShapeModel shape, HandController handController)
     {
-        CardView card = Instantiate(PredefinedShapeScriptableObject.Instance.CardViewPrefab, parent);
-        card.InitializeView(shape,_cardController);
+        CardView card = Instantiate(PredefinedShapeScriptableObject.Instance.CardViewPrefab, handController.transform);
+        card.InitializeView(shape);
+        handController.AddCard(card);
         return card;
     }
 }

@@ -32,3 +32,27 @@ MonoBehaviour:
       OXX
 
       XXO'
+  - _shapeType: 1
+    _shapeName: Beehive
+    _cardImage: {fileID: 0}
+    _tileArrangement: 'OXXO
+
+      XOOX
+
+      OXXO'
+  - _shapeType: 2
+    _shapeName: Toad
+    _cardImage: {fileID: 0}
+    _tileArrangement: 'OXXX
+
+      XXXO'
+  - _shapeType: 2
+    _shapeName: LWSS
+    _cardImage: {fileID: 0}
+    _tileArrangement: 'XOOXO
+
+      OOOOX
+
+      XOOOX
+
+      OXXXX'

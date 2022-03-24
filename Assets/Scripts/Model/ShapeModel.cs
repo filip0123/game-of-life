@@ -6,6 +6,7 @@ using UnityEngine;
 [Serializable]
 public class ShapeModel
 {
+    [SerializeField] int _ID = 0;
     [SerializeField] private ShapeType _shapeType;
     [SerializeField] private string _shapeName = null;
     [SerializeField] private Sprite _cardImage = null;
@@ -23,7 +24,7 @@ public class ShapeModel
             return _logicalTileArrangement;
         }
     }
-
+    public int ID => _ID;
     public int SizeX => _sizeX;
     public int SizeY => _sizeY;
 
