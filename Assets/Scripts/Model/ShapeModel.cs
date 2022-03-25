@@ -32,9 +32,6 @@ public class ShapeModel
     public string ShapeName => _shapeName;
     public Sprite CardImage => _cardImage;
 
-
-
-
     /// <summary>
     /// Transforms tileArrangment string into bool[,] by setting Os as false and Xs as true
     /// </summary>

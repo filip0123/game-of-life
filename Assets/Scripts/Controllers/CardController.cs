@@ -13,14 +13,6 @@ public class CardController : MonoBehaviour
     private GridTileView _selectedTile = null;
 
     Vector2 _originalPosition = Vector2.zero;
-    Camera Main
-    {
-        get 
-        {
-            if (_main == null) _main = Camera.main;
-            return _main;
-        }
-    }
 
     public void StartDrag(CardView cardView)
     {
@@ -50,6 +42,7 @@ public class CardController : MonoBehaviour
 
     private void ResetCard()
     {
+        _cantPlaceCursor.SetActive(false);
         _selectedCardView.transform.position = _originalPosition;
         _selectedCardView.gameObject.SetActive(true);
         _selectedCardView = null;
@@ -75,18 +68,25 @@ public class CardController : MonoBehaviour
         {
             _gridController.PreviewShape(_selectedTile.Position, _selectedCardView.Shape.LogicalTileArrangement, _selectedCardView.Shape.SizeX, _selectedCardView.Shape.SizeY);
         }
+        else
+        {
+            _cantPlaceCursor.SetActive(true);
+        }
     }
 
     private bool CanPlace()
     {
-        return _gridController.CanSetShape(_selectedTile.Position, _selectedCardView.Shape.LogicalTileArrangement, _selectedCardView.Shape.SizeX, _selectedCardView.Shape.SizeY);
+        bool canPlace = _gridController.CanSetShape(_selectedTile.Position, _selectedCardView.Shape.LogicalTileArrangement, _selectedCardView.Shape.SizeX, _selectedCardView.Shape.SizeY);
+
+        _cantPlaceCursor.SetActive(!canPlace);
+        if(!canPlace) _cantPlaceCursor.transform.position = Input.mousePosition;
+        return canPlace;
     }
 
     private void Update()
     {
         if (_dragging)
         {
-
             Transform raycast = RaycastResolver.GetRaycastTransform(Layer.Tile);
             if (raycast != null && (_selectedTile == null || raycast != _selectedTile.transform))
             {

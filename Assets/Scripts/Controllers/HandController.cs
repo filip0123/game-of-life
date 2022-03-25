@@ -8,15 +8,10 @@ public class HandController : MonoBehaviour
     [SerializeField] private CardController _cardController = null;
     [SerializeField] private TextMeshProUGUI _actionsTxt = null;
 
-    private int _handId = 0;
+    private int _points = 0;
     private int _actions = 0;
     private List<CardView> _cards = null;
     private bool _onTurn = true;
-
-    public void Initialize(int handId)
-    {
-        _handId = handId;
-    }
 
     public void AddCard(CardView card)
     {
@@ -26,6 +21,18 @@ public class HandController : MonoBehaviour
         card.OnPointerDownAction += () => TryPlay(card);
 
         _cards.Add(card);
+    }
+
+    public void ClearGame()
+    {
+        foreach(CardView card in _cards)
+        {
+            Destroy(card);
+        }
+
+        _actions = 0;
+        _points = 0;
+        _cards.Clear();
     }
 
     public void TryPlay(CardView card)

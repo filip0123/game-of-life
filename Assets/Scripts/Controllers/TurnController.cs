@@ -13,10 +13,26 @@ public class TurnController : MonoBehaviour
 
     [SerializeField] private List<HandController> _hands = null;
 
-
     public void Initialize()
     {
         _instance = this;
+    }
+
+    public void StartGame()
+    {
+        _handOnTurnId = 0;
+        _hands[HandOnTurnId].StartTurn(_currentTurn);
+    }
+
+    public void ResetGame()
+    {
+        foreach(HandController hand in _hands)
+        {
+            hand.ClearGame();
+        }
+
+        _currentTurn = 0;
+        _handOnTurnId = 0;
     }
 
     public void ChangeTurn()
