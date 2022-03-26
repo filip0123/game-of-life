@@ -4,23 +4,27 @@ using UnityEngine;
 
 public class TurnController : MonoBehaviour
 {
-    private static TurnController _instance = null;
-    public static TurnController Instance => _instance;
-
     private int _handOnTurnId = 0;
     private int _currentTurn = 0;
     public int HandOnTurnId => _handOnTurnId;
 
+    [SerializeField] private GridController _gridController = null;
     [SerializeField] private List<HandController> _hands = null;
 
     public void Initialize()
     {
-        _instance = this;
+        _gridController.OnSimulationOver += OnSimulationOver;
     }
 
     public void StartGame()
     {
         _handOnTurnId = 0;
+
+        foreach(HandController hand in _hands)
+        {
+            hand.ResetPoints();
+        }
+
         _hands[HandOnTurnId].StartTurn(_currentTurn);
     }
 
@@ -38,11 +42,22 @@ public class TurnController : MonoBehaviour
     public void ChangeTurn()
     {
         _handOnTurnId++;
+        _gridController.StartSimulation();
+    }
+
+    private void OnSimulationOver()
+    {
+        foreach(HandController hand in _hands)
+        {
+            hand.AddPoints(_gridController.LiveCount);
+        }
+
         if (_handOnTurnId == _hands.Count)
         {
             _handOnTurnId = 0;
             _currentTurn++;
         }
+
         _hands[HandOnTurnId].StartTurn(_currentTurn);
     }
 }

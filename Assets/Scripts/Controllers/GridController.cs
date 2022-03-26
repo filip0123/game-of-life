@@ -16,18 +16,22 @@ public class GridController : MonoBehaviour
     private int _gridSizeX = 0;
     private int _gridSizeY = 0;
 
-    private float _tickTime = 1f;
-    private float _currentTickTime = 0f;
+    private float _cycleTime = 1f;
+    private float _currentCycleTime = 0f;
+    private int _currentCycle = 0;
+    private int _liveCount = 0;
 
     private bool _gridInitialized = false;
     private bool _simulating = false;
+    public int LiveCount => _liveCount;
     public bool GridInitialized => _gridInitialized;
-
     public bool Simulating => _simulating;
+
+    public System.Action OnSimulationOver = null;
 
     public void Initialize()
     {
-        _tickTime = GameConfigScriptableObject.Instance.TickTime;
+        _cycleTime = GameConfigScriptableObject.Instance.TickTime;
         _liveAdjecentTiles = new HashSet<Vector2Int>();
         _previewTiles = new HashSet<Vector2Int>();
     }
@@ -56,21 +60,40 @@ public class GridController : MonoBehaviour
     public void StartSimulation()
     {
         _simulating = true;
+        _currentCycle = 0;
+        _currentCycleTime = 0f;
+    }
+
+    private void PauseSimulation()
+    {
+        _simulating = false;
+        CountLive();
+        OnSimulationOver?.Invoke();
+    }
+
+    private void CountLive()
+    {
+        foreach(int tile in _gameOfLifeGrid)
+        {
+            if (tile == _STATE_LIVE) _liveCount++;
+        }
     }
 
     public void SetSimulation()
     {
         _simulating = false;
         _liveAdjecentTiles.Clear();
-        _currentTickTime = 0f;
+        _currentCycleTime = 0f;
 
         if (GameConfigScriptableObject.Instance.DoRandomStart) RandomizeGrid();
 
         _gridView.SetActiveFields(ref _gameOfLifeGrid, _gridSizeX, _gridSizeY);
     }
 
-    private void Tick()
+    private void Cycle()
     {
+        _currentCycle++; 
+
         HashSet<Vector2Int> liveAdjecentTilesNext = new HashSet<Vector2Int>();
         int[,] _nextTick = new int[_gridSizeX, _gridSizeY];
 
@@ -84,7 +107,7 @@ public class GridController : MonoBehaviour
 
         if (_liveAdjecentTiles.SetEquals(liveAdjecentTilesNext))
         {
-            _simulating = false;
+            PauseSimulation();
         }
         else
         {
@@ -179,8 +202,8 @@ public class GridController : MonoBehaviour
 
     public void PreviewShape(Vector2Int targetTile, bool[,] tileShape, int tileShapeSizeX, int tileShapeSizeY)
     {
-        int gridX = 0;
-        int gridY = 0;
+        int gridX;
+        int gridY;
 
         for (int x = 0; x < tileShapeSizeX; ++x)
         {
@@ -208,18 +231,34 @@ public class GridController : MonoBehaviour
         _gridView.SetActiveFields(ref _gameOfLifeGrid, _gridSizeX, _gridSizeY);
     }
 
+    public void ClearGrid()
+    {
+        ClearPreviews();
+
+        for (int x = 0; x < _gridSizeX; ++x)
+        {
+            for (int y = 0; y < _gridSizeY; ++y)
+            {
+                _gameOfLifeGrid[x, y] = _STATE_EMPTY;
+            }
+        }
+
+        _gridView.SetActiveFields(ref _gameOfLifeGrid, _gridSizeX, _gridSizeY);
+    }
+
     private void Update()
     {
         if (_simulating)
         {
-            if (_currentTickTime > _tickTime)
+            if (_currentCycleTime > _cycleTime)
             {
-                Tick();
-                _currentTickTime -= _tickTime;
+                Cycle();
+                if (_currentCycle >= CardGameScriptableObject.Instance.CyclesPerTurn) PauseSimulation();
+                _currentCycleTime -= _cycleTime;
             }
             else
             {
-                _currentTickTime += Time.deltaTime;
+                _currentCycleTime += Time.deltaTime;
             }
         }
     }

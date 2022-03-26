@@ -8,27 +8,44 @@ public class UIController : MonoBehaviour
     [SerializeField] TextMeshProUGUI _inputFieldSizeXPlaceholder = null;
     [SerializeField] TMP_InputField _inputFieldSizeY = null;
     [SerializeField] TextMeshProUGUI _inputFieldSizeYPlaceholder = null;
-    [SerializeField] Button _buttonInitializeField = null;
-    [SerializeField] Button _buttonStartSimulation = null;
-    [SerializeField] Button _buttonRestartSimulation = null;
-    [SerializeField] GridController _gridController; 
+    [SerializeField] Button _buttonStartGame = null;
+    [SerializeField] Button _buttonRestartGame = null;
+    [SerializeField] Button _buttonEndTurn = null;
+    [SerializeField] GridController _gridController;
+    [SerializeField] TurnController _turnController;
     
     public void Initialize()
     {
-        _buttonInitializeField.onClick.AddListener(OnInitializeField);
-        _buttonStartSimulation.onClick.AddListener(OnStartSimulation);
-        _buttonRestartSimulation.onClick.AddListener(SetSimulation);
         _inputFieldSizeXPlaceholder.text = GameConfigScriptableObject.Instance.DefaultX.ToString();
         _inputFieldSizeYPlaceholder.text = GameConfigScriptableObject.Instance.DefaultY.ToString();
 
-        _inputFieldSizeX.onEndEdit.AddListener((x) => _buttonInitializeField.interactable = true);
-        _inputFieldSizeY.onEndEdit.AddListener((x) => _buttonInitializeField.interactable = true);
-
-        _buttonStartSimulation.gameObject.SetActive(false);
-        _buttonRestartSimulation.gameObject.SetActive(false);
+        _buttonStartGame.onClick.AddListener(OnStartGame);
+        _buttonRestartGame.onClick.AddListener(OnRestartGame);
+        _buttonEndTurn.onClick.AddListener(OnEndTurn);
     }
 
-    private void OnInitializeField()
+    private void OnStartGame()
+    {
+        InitializeGrid();
+        _turnController.StartGame();
+
+        _buttonStartGame.gameObject.SetActive(false);
+        _buttonRestartGame.gameObject.SetActive(true);
+    }
+
+    private void OnRestartGame()
+    {
+        _buttonStartGame.gameObject.SetActive(false);
+        _buttonRestartGame.gameObject.SetActive(true);
+        _gridController.ClearGrid();
+    }
+
+    private void OnEndTurn()
+    {
+        _turnController.ChangeTurn();
+    }
+
+    private void InitializeGrid()
     {
         int sizeX = GameConfigScriptableObject.Instance.DefaultX;
         int sizeY = GameConfigScriptableObject.Instance.DefaultY;
@@ -41,22 +58,5 @@ public class UIController : MonoBehaviour
 
         if (!_gridController.GridInitialized) _gridController.InitializeGrid(sizeX, sizeY);
         else _gridController.ResizeGrid(sizeX, sizeY);
-
-        SetSimulation();
-
-        _buttonInitializeField.interactable = false;
-    }
-    private void OnStartSimulation()
-    {
-        _gridController.StartSimulation();
-        _buttonStartSimulation.gameObject.SetActive(false);
-        _buttonRestartSimulation.gameObject.SetActive(true);
-    }
-
-    private void SetSimulation()
-    {
-        _gridController.SetSimulation();
-        _buttonStartSimulation.gameObject.SetActive(true);
-        _buttonRestartSimulation.gameObject.SetActive(false);
     }
 }
