@@ -4,18 +4,25 @@ using TMPro;
 
 public class HandController : MonoBehaviour
 {
+    private static readonly int _MATERIAL_COLOR_HASH = Shader.PropertyToID("_Color");
+
     [SerializeField] private GameObject _handContainer = null;
     [SerializeField] private DeckController _deckController = null;
     [SerializeField] private CardController _cardController = null;
     [SerializeField] private TextMeshProUGUI _actionsTxt = null;
-    [SerializeField] private TextMeshProUGUI _pointsTxt = null;
 
+    private int _handId = 0;
     private int _points = 0;
     private int _actions = 0;
     private List<CardView> _cards = null;
     private bool _onTurn = true;
-
     public GameObject HandContainer => _handContainer;
+    public int Points => _points;
+
+    public void InitializeHand(int handId)
+    {
+        _handId = handId;
+    }
 
     public void AddCard(CardView card)
     {
@@ -29,9 +36,11 @@ public class HandController : MonoBehaviour
 
     public void ClearGame()
     {
+        if (_cards == null) return;
+
         foreach(CardView card in _cards)
         {
-            Destroy(card);
+            Destroy(card.gameObject);
         }
 
         _actions = 0;
@@ -44,12 +53,14 @@ public class HandController : MonoBehaviour
         if (_onTurn && _actions >= card.Shape.Cost)
         {
             _cardController.OnCardPlaced = () => OnCardPlace(card);
-            _cardController.StartDrag(card, this);
+            _cardController.StartDrag(card, _handId);
         }
     }
 
     public void StartTurn(int currentTurn)
     {
+        gameObject.SetActive(true);
+        _onTurn = true;
         _actions = CardGameScriptableObject.Instance.TurnActions;
         _actionsTxt.text = _actions.ToString();
 
@@ -57,11 +68,11 @@ public class HandController : MonoBehaviour
         {
             for (int i = 0; i < CardGameScriptableObject.Instance.StartingCards; ++i)
             {
-                _deckController.Draw(this);
+                _deckController.Draw(this, _handId);
             }
         }
 
-        _deckController.Draw(this);
+        _deckController.Draw(this, _handId);
     }
 
     public void OnCardPlace(CardView card)
@@ -75,17 +86,16 @@ public class HandController : MonoBehaviour
     public void EndTurn()
     {
         _onTurn = false;
+        gameObject.SetActive(false);
     }
 
     public void AddPoints(int amount)
     {
         _points = _points + amount;
-        _pointsTxt.text = _points.ToString();
     }
 
     public void ResetPoints()
     {
         _points = 0;
-        _pointsTxt.text = "0";
     }
 }

@@ -27,13 +27,21 @@ public class GridTileView : MonoBehaviour
             case TileState.selected:
                 Select();
                 break;
+            case TileState.playerOne:
+                Show(0);
+                break;
+            case TileState.playerTwo:
+                Show(1);
+                break;
         }
     }
 
-    private void Show()
+    private void Show(int playerId = -1)
     {
         _object.enabled = true;
-        _object.material = GameConfigScriptableObject.Instance.MaterialLive;
+        _object.material = playerId == -1 ? 
+            GameConfigScriptableObject.Instance.MaterialLive : 
+            CardGameScriptableObject.Instance.PlayerTileMaterials[playerId];
     }
 
     private void Hide()

@@ -6,6 +6,7 @@ public class CardController : MonoBehaviour
     [SerializeField] private GameObject _cantPlaceCursor = null;
 
     private CardView _selectedCardView = null;
+    private int _selectedCardPlayerId = 0;
     private bool _dragging = false;
     private bool _gridShapeForm = false;
 
@@ -15,8 +16,9 @@ public class CardController : MonoBehaviour
 
     public System.Action OnCardPlaced = null;
 
-    public void StartDrag(CardView cardView, HandController ownerHand)
+    public void StartDrag(CardView cardView, int playerId)
     {
+        _selectedCardPlayerId = playerId;
         _originalPosition = cardView.transform.position;
         _selectedCardView = cardView;
         _dragging = true;
@@ -44,8 +46,10 @@ public class CardController : MonoBehaviour
     private void ResetCard()
     {
         _cantPlaceCursor.SetActive(false);
-        _selectedCardView.transform.position = _originalPosition;
         _selectedCardView.gameObject.SetActive(true);
+
+        _selectedCardView.transform.position = _originalPosition;
+
         _selectedCardView = null;
         _dragging = false;
         _gridShapeForm = false;
@@ -53,11 +57,11 @@ public class CardController : MonoBehaviour
 
     private void Place()
     {
-        _gridController.SetShape(_selectedTile.Position, _selectedCardView.Shape.LogicalTileArrangement, _selectedCardView.Shape.SizeX, _selectedCardView.Shape.SizeY);
+        _gridController.SetShape(_selectedTile.Position, _selectedCardView.Shape.LogicalTileArrangement, _selectedCardView.Shape.SizeX, _selectedCardView.Shape.SizeY, _selectedCardPlayerId);
 
         OnCardPlaced?.Invoke();
 
-        Destroy(_selectedCardView);
+        Destroy(_selectedCardView.gameObject);
         _selectedCardView = null;
         _dragging = false;
         _gridShapeForm = false;

@@ -5,6 +5,8 @@ using UnityEngine;
 public class GridController : MonoBehaviour
 {
     private readonly int _STATE_LIVE = (int)TileState.live;
+    private readonly int _STATE_LIVE_P1 = (int)TileState.playerOne;
+    private readonly int _STATE_LIVE_P2 = (int) TileState.playerTwo;
     private readonly int _STATE_EMPTY = (int)TileState.empty;
     private readonly int _STATE_SELECTED = (int)TileState.selected;
 
@@ -19,13 +21,10 @@ public class GridController : MonoBehaviour
     private float _cycleTime = 1f;
     private float _currentCycleTime = 0f;
     private int _cyclesToSimulate = 0;
-    private int _liveCount = 0;
 
     private bool _gridInitialized = false;
     private bool _simulating = false;
-    public int LiveCount => _liveCount;
     public bool GridInitialized => _gridInitialized;
-    public bool Simulating => _simulating;
 
     public System.Action OnSimulationOver = null;
 
@@ -67,16 +66,20 @@ public class GridController : MonoBehaviour
     private void PauseSimulation()
     {
         _simulating = false;
-        CountLive();
         OnSimulationOver?.Invoke();
     }
 
-    private void CountLive()
+    public int CountLive(int handId)
     {
+        int liveCount = 0;
+        int tileState = CardGameScriptableObject.Instance.GetTileState(handId);
+
         foreach(int tile in _gameOfLifeGrid)
         {
-            if (tile == _STATE_LIVE) _liveCount++;
+            if (tile == tileState) liveCount++;
         }
+
+        return liveCount;
     }
 
     public void SetSimulation()
@@ -100,7 +103,7 @@ public class GridController : MonoBehaviour
 
         foreach(Vector2Int tile in _liveAdjecentTiles)
         {
-            _nextTick[tile.x, tile.y] = CheckNeighbours(tile.x, tile.y) ? _STATE_LIVE : _STATE_EMPTY;
+            _nextTick[tile.x, tile.y] = CheckNeighbours(tile.x, tile.y);
             if (_nextTick[tile.x, tile.y] != 0) AddLiveAdjecentTiles(liveAdjecentTilesNext, tile);
         }
 
@@ -117,21 +120,52 @@ public class GridController : MonoBehaviour
         }
     }
 
-    private bool CheckNeighbours(int x, int y)
+    private int CheckNeighbours(int x, int y)
     {
         int liveCount = 0;
+        int playerOneTiles = 0;
+        int playerTwoTiles = 0;
+
         for (int i = x - 1; i <= x + 1; ++i)
         {
             if (i < 0 || i >= _gridSizeX) continue;
             for (int j = y - 1; j <= y + 1; ++j)
             {
                 if (j < 0 || j >= _gridSizeY || i == x && j == y) continue;
-                else if (_gameOfLifeGrid[i, j] != _STATE_EMPTY) ++liveCount;
+                else if (_gameOfLifeGrid[i, j] != _STATE_EMPTY)
+                {
+                    if (_gameOfLifeGrid[i, j] == _STATE_LIVE_P1) playerOneTiles++;
+                    else if (_gameOfLifeGrid[i, j] == _STATE_LIVE_P2) playerTwoTiles++;
+                    ++liveCount;
+                }
             }
         }
 
+        int toReturn = _STATE_EMPTY;
+
         //RULES : live cell with 2-3 neighbours survive, dead cells with 3 neighbours become alive, other = dead
-        return _gameOfLifeGrid[x, y] != _STATE_EMPTY && liveCount == 2 || liveCount == 3; 
+        if (_gameOfLifeGrid[x, y] != _STATE_EMPTY && liveCount == 2 || liveCount == 3)
+        {
+            if(CardGameScriptableObject.Instance.ReplaceRuleOn)
+            {
+                //REPLACE RULES : A > B => A  
+                //MY RULE : NEUTRALS : A = B => N
+                if (playerOneTiles != 0 || playerTwoTiles != 0) toReturn = playerOneTiles > playerTwoTiles ? _STATE_LIVE_P1 : _STATE_LIVE_P2;
+                else toReturn = _STATE_LIVE;
+            }
+            else
+            {
+                //DELETE RULES :  A  > B => DEAD 
+                //MY RULES : NEUTRALS : A = B => N 
+                //                      A = 0 & B != 0 => B
+                //                      A = 0 & B = 0 => N
+                if (playerOneTiles != 0 && playerTwoTiles != 0) toReturn = playerTwoTiles == playerOneTiles ? _STATE_LIVE : _STATE_EMPTY;
+                else if (playerOneTiles != 0 || playerTwoTiles != 0) toReturn = playerOneTiles > playerTwoTiles ? _STATE_LIVE_P1 : _STATE_LIVE_P2;
+                else toReturn = _STATE_LIVE;
+            }
+        }
+
+        return toReturn; 
     }
 
     private void AddLiveAdjecentTiles(HashSet<Vector2Int> targetSet, Vector2Int tile)
@@ -174,7 +208,7 @@ public class GridController : MonoBehaviour
                 if (gridY == _gridSizeY) return false;
                 if (tileShape[x, y])
                 {
-                    if (_gameOfLifeGrid[gridX, gridY] == _STATE_LIVE) return false;
+                    if (_gameOfLifeGrid[gridX, gridY] != _STATE_EMPTY && _gameOfLifeGrid[gridX, gridY] != _STATE_SELECTED) return false;
                 }
             }
         }
@@ -182,10 +216,12 @@ public class GridController : MonoBehaviour
         return true;
     }
 
-    public void SetShape(Vector2Int targetTile, bool[,] tileShape, int tileShapeSizeX, int tileShapeSizeY)
+    public void SetShape(Vector2Int targetTile, bool[,] tileShape, int tileShapeSizeX, int tileShapeSizeY, int playerId)
     {
         int gridX = 0;
         int gridY = 0;
+
+        int playerState = CardGameScriptableObject.Instance.GetTileState(playerId);
 
         for (int x = 0; x < tileShapeSizeX; ++x)
         {
@@ -193,8 +229,8 @@ public class GridController : MonoBehaviour
             for (int y = 0; y < tileShapeSizeY; ++y)
             {
                 gridY = targetTile.y + y;
-                _gameOfLifeGrid[gridX, gridY] = tileShape[x, y] ? _STATE_LIVE : _gameOfLifeGrid[gridX, gridY];
-                if(_gameOfLifeGrid[gridX, gridY] == _STATE_LIVE) AddLiveAdjecentTiles(_liveAdjecentTiles, new Vector2Int(gridX, gridY));
+                _gameOfLifeGrid[gridX, gridY] = tileShape[x, y] ? playerState : _gameOfLifeGrid[gridX, gridY];
+                if(_gameOfLifeGrid[gridX, gridY] == playerState) AddLiveAdjecentTiles(_liveAdjecentTiles, new Vector2Int(gridX, gridY));
             }
         }
 

@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class UIController : MonoBehaviour
 {
@@ -12,8 +13,16 @@ public class UIController : MonoBehaviour
     [SerializeField] Button _buttonRestartGame = null;
     [SerializeField] Button _buttonEndTurn = null;
 
-    [SerializeField] GridController _gridController;
-    [SerializeField] TurnController _turnController;
+    [SerializeField] GridController _gridController = null;
+    [SerializeField] TurnController _turnController = null;
+    [SerializeField] DeckController _deckController = null;
+
+    [SerializeField] TextMeshProUGUI _currentTurnText = null;
+    [SerializeField] TextMeshProUGUI _playerOnTurnText = null;
+
+    [SerializeField] Button _hideScoreboardButton = null;
+    [SerializeField] GameObject _scoreboard = null;
+    [SerializeField] TextMeshProUGUI _scoreBoardText = null;
     
     public void Initialize()
     {
@@ -23,27 +32,41 @@ public class UIController : MonoBehaviour
         _buttonStartGame.onClick.AddListener(OnStartGame);
         _buttonRestartGame.onClick.AddListener(OnRestartGame);
         _buttonEndTurn.onClick.AddListener(OnEndTurn);
+        _hideScoreboardButton.onClick.AddListener(() => _scoreboard.SetActive(false));
+
+        _turnController.OnEndGame = OnEndGame;
+        _gridController.OnSimulationOver += SetTurnText;
     }
 
     private void OnStartGame()
     {
         InitializeGrid();
         _turnController.StartGame();
+        SetTurnText();
 
         _buttonStartGame.gameObject.SetActive(false);
         _buttonRestartGame.gameObject.SetActive(true);
+
+        _buttonEndTurn.gameObject.SetActive(true);
+        _currentTurnText.gameObject.SetActive(true);
+        _playerOnTurnText.gameObject.SetActive(true);
     }
 
     private void OnRestartGame()
     {
         _buttonStartGame.gameObject.SetActive(false);
         _buttonRestartGame.gameObject.SetActive(true);
+
         _gridController.ClearGrid();
+        _gridController.SetSimulation();
+        _turnController.ResetGame();
+        _deckController.Initialize();
     }
 
     private void OnEndTurn()
     {
         _turnController.ChangeTurn();
+        SetTurnText();
     }
 
     private void InitializeGrid()
@@ -59,5 +82,29 @@ public class UIController : MonoBehaviour
 
         if (!_gridController.GridInitialized) _gridController.InitializeGrid(sizeX, sizeY);
         else _gridController.ResizeGrid(sizeX, sizeY);
+    }
+
+    private void OnEndGame()
+    {
+        string scoreboardText = "";
+
+        foreach(KeyValuePair<int,int> handPoints in _turnController.GetScores())
+        {
+            scoreboardText += $"Player {handPoints.Key} : {handPoints.Value}\n";
+        }
+
+        _buttonEndTurn.gameObject.SetActive(false);
+        _scoreBoardText.text = scoreboardText;
+        _scoreboard.SetActive(true);
+
+        _currentTurnText.gameObject.SetActive(false);
+        _playerOnTurnText.gameObject.SetActive(false);
+    }
+
+    private void SetTurnText()
+    {
+        _currentTurnText.text = (_turnController.CurrentTurn + 1).ToString();
+        _playerOnTurnText.gameObject.SetActive(_turnController.HandOnTurnId < CardGameScriptableObject.Instance.PlayerCount);
+        _playerOnTurnText.text = (_turnController.HandOnTurnId + 1).ToString();
     }
 }

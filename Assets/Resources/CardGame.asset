@@ -12,11 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f26df2e6ee3c7814791e026c4c392ce3, type: 3}
   m_Name: CardGame
   m_EditorClassIdentifier: 
-  _premadeDeck: 0
+  _replaceRuleOn: 0
+  _playerCount: 2
+  _premadeDeck: 1
   _startingCards: 2
   _gameTurns: 6
   _turnActions: 4
-  _cyclesPerTurn: 100
+  _cyclesPerTurn: 50
+  _decks:
+  - CardList: 00000000030000000100000004000000020000000500000002000000050000000200000005000000
+  - CardList: 00000000010000000200000003000000040000000500000000000000010000000200000003000000
+  _playerTileMaterials:
+  - {fileID: 2100000, guid: 4b5c5b4cee294b7479bc59fd8eaa2960, type: 2}
+  - {fileID: 2100000, guid: f75eafd1be6914e4087d6dc73e63fb65, type: 2}
   _shapeTypeCosts:
   - _shapeType: 1
     _actionCost: 1
@@ -24,4 +32,3 @@ MonoBehaviour:
     _actionCost: 2
   - _shapeType: 3
     _actionCost: 3
-  _player1Deck: 

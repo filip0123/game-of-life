@@ -11,8 +11,9 @@ public class GameInitializer : MonoBehaviour
     private void Awake()
     {
         _gridController.Initialize();
-        _UIController.Initialize();
         _deckController.Initialize();
         _turnController.Initialize();
+
+        _UIController.Initialize();
     }
 }
