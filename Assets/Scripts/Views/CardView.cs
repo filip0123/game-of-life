@@ -7,6 +7,7 @@ using System;
 public class CardView : MonoBehaviour, IPointerDownHandler
 {
     [SerializeField] private TextMeshProUGUI _nameText = null;
+    [SerializeField] private TextMeshProUGUI _costText = null;
     [SerializeField] private Image _image = null;
 
     private ShapeModel _shape = null;
@@ -19,10 +20,12 @@ public class CardView : MonoBehaviour, IPointerDownHandler
         _shape = shape; 
         _image.sprite = shape.CardImage;
         _nameText.text = shape.ShapeName;
+        _costText.text = shape.Cost.ToString();
     }
 
     public void OnPointerDown(PointerEventData data)
     {
         OnPointerDownAction?.Invoke();
     }
+
 }

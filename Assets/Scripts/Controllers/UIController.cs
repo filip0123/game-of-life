@@ -11,6 +11,7 @@ public class UIController : MonoBehaviour
     [SerializeField] Button _buttonStartGame = null;
     [SerializeField] Button _buttonRestartGame = null;
     [SerializeField] Button _buttonEndTurn = null;
+
     [SerializeField] GridController _gridController;
     [SerializeField] TurnController _turnController;
     

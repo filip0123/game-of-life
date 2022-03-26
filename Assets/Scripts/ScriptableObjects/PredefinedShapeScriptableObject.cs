@@ -20,6 +20,7 @@ public class PredefinedShapeScriptableObject : ScriptableObject
     [SerializeField] private CardView _cardViewPrefab = null;
     [SerializeField] private ShapeModel[] _shapes = null;
 
+
     public CardView CardViewPrefab => _cardViewPrefab;
 
     public ShapeModel GetRandomModelOfType(ShapeType type)

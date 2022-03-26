@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "CardGame", menuName = "ScriptableObjects/CardGame", order = 1)]
@@ -21,6 +22,8 @@ public class CardGameScriptableObject : ScriptableObject
     [SerializeField] private int _turnActions = 4;
     [SerializeField] private int _cyclesPerTurn = 100;
 
+    [SerializeField] private ShapeTypeCostModel[] _shapeTypeCosts = null;
+
     [SerializeField] private List<int> _player1Deck = null;
 
     public bool PremadeDeck => _premadeDeck;
@@ -30,4 +33,9 @@ public class CardGameScriptableObject : ScriptableObject
     public int CyclesPerTurn => _cyclesPerTurn;
 
     public List<int> Player1Deck => _player1Deck;
+
+    public int GetCost(ShapeType type)
+    {
+        return _shapeTypeCosts.FirstOrDefault(x => x._shapeType == type)._actionCost;
+    }
 }

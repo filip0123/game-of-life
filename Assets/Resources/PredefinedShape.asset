@@ -14,17 +14,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _cardViewPrefab: {fileID: 8407261376411914896, guid: 980ba43924e693f4e99821e97276ec5e, type: 3}
   _shapes:
-  - _shapeType: 1
+  - _ID: 0
+    _shapeType: 1
     _shapeName: Block
     _cardImage: {fileID: 0}
     _tileArrangement: 'XX
 
       XX'
-  - _shapeType: 2
+  - _ID: 1
+    _shapeType: 2
     _shapeName: Blinker
     _cardImage: {fileID: 0}
     _tileArrangement: XXX
-  - _shapeType: 3
+  - _ID: 2
+    _shapeType: 3
     _shapeName: Glider
     _cardImage: {fileID: 0}
     _tileArrangement: 'XOO
@@ -32,7 +35,8 @@ MonoBehaviour:
       OXX
 
       XXO'
-  - _shapeType: 1
+  - _ID: 3
+    _shapeType: 1
     _shapeName: Beehive
     _cardImage: {fileID: 0}
     _tileArrangement: 'OXXO
@@ -40,13 +44,15 @@ MonoBehaviour:
       XOOX
 
       OXXO'
-  - _shapeType: 2
+  - _ID: 4
+    _shapeType: 2
     _shapeName: Toad
     _cardImage: {fileID: 0}
     _tileArrangement: 'OXXX
 
       XXXO'
-  - _shapeType: 2
+  - _ID: 5
+    _shapeType: 3
     _shapeName: LWSS
     _cardImage: {fileID: 0}
     _tileArrangement: 'XOOXO

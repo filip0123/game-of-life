@@ -1,11 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class GridView : MonoBehaviour
 {
     GridTileView _gridTilePrefab = null;
+    [SerializeField] TextMeshProUGUI _cyclesLeftText = null;
     [SerializeField] Transform _bottomLeft = null;
     [SerializeField] Transform _topRight = null;
 
@@ -163,5 +165,11 @@ public class GridView : MonoBehaviour
             }
             currentPosX += _tileSize;
         }
+    }
+
+    public void SetCyclesLeft(int cycles)
+    {
+        _cyclesLeftText.gameObject.SetActive(true);
+        _cyclesLeftText.text = cycles.ToString();
     }
 }

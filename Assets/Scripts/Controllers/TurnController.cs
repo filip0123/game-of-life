@@ -6,6 +6,7 @@ public class TurnController : MonoBehaviour
 {
     private int _handOnTurnId = 0;
     private int _currentTurn = 0;
+    private bool _gameOver = false;
     public int HandOnTurnId => _handOnTurnId;
 
     [SerializeField] private GridController _gridController = null;
@@ -18,6 +19,8 @@ public class TurnController : MonoBehaviour
 
     public void StartGame()
     {
+        _gameOver = false;
+
         _handOnTurnId = 0;
 
         foreach(HandController hand in _hands)
@@ -41,23 +44,31 @@ public class TurnController : MonoBehaviour
 
     public void ChangeTurn()
     {
+        if (_gameOver) return;
+
         _handOnTurnId++;
         _gridController.StartSimulation();
     }
 
     private void OnSimulationOver()
     {
-        foreach(HandController hand in _hands)
-        {
-            hand.AddPoints(_gridController.LiveCount);
-        }
-
         if (_handOnTurnId == _hands.Count)
         {
             _handOnTurnId = 0;
             _currentTurn++;
         }
 
-        _hands[HandOnTurnId].StartTurn(_currentTurn);
+        if (_currentTurn == CardGameScriptableObject.Instance.GameTurns)
+        {
+            foreach (HandController hand in _hands)
+            {
+                hand.AddPoints(_gridController.LiveCount);
+            }
+            _gameOver = true;
+        }
+        else
+        {
+            _hands[HandOnTurnId].StartTurn(_currentTurn);
+        }
     }
 }

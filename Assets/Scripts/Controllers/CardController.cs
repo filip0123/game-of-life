@@ -5,16 +5,17 @@ public class CardController : MonoBehaviour
     [SerializeField] private GridController _gridController = null;
     [SerializeField] private GameObject _cantPlaceCursor = null;
 
-    private Camera _main = null;
     private CardView _selectedCardView = null;
     private bool _dragging = false;
     private bool _gridShapeForm = false;
 
     private GridTileView _selectedTile = null;
 
-    Vector2 _originalPosition = Vector2.zero;
+    private Vector2 _originalPosition = Vector2.zero;
 
-    public void StartDrag(CardView cardView)
+    public System.Action OnCardPlaced = null;
+
+    public void StartDrag(CardView cardView, HandController ownerHand)
     {
         _originalPosition = cardView.transform.position;
         _selectedCardView = cardView;
@@ -53,6 +54,8 @@ public class CardController : MonoBehaviour
     private void Place()
     {
         _gridController.SetShape(_selectedTile.Position, _selectedCardView.Shape.LogicalTileArrangement, _selectedCardView.Shape.SizeX, _selectedCardView.Shape.SizeY);
+
+        OnCardPlaced?.Invoke();
 
         Destroy(_selectedCardView);
         _selectedCardView = null;

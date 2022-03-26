@@ -28,6 +28,8 @@ public class ShapeModel
     public int SizeX => _sizeX;
     public int SizeY => _sizeY;
 
+    public int Cost => CardGameScriptableObject.Instance.GetCost(_shapeType);
+
     public ShapeType ShapeType => _shapeType;
     public string ShapeName => _shapeName;
     public Sprite CardImage => _cardImage;

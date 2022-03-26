@@ -41,12 +41,17 @@ public class HandController : MonoBehaviour
 
     public void TryPlay(CardView card)
     {
-       if(_onTurn) _cardController.StartDrag(card);
+        if (_onTurn && _actions >= card.Shape.Cost)
+        {
+            _cardController.OnCardPlaced = () => OnCardPlace(card);
+            _cardController.StartDrag(card, this);
+        }
     }
 
     public void StartTurn(int currentTurn)
     {
         _actions = CardGameScriptableObject.Instance.TurnActions;
+        _actionsTxt.text = _actions.ToString();
 
         if(currentTurn == 0)
         {
@@ -57,6 +62,14 @@ public class HandController : MonoBehaviour
         }
 
         _deckController.Draw(this);
+    }
+
+    public void OnCardPlace(CardView card)
+    {
+        _actions -= card.Shape.Cost;
+        _actionsTxt.text = _actions.ToString();
+
+        _cards.Remove(card);
     }
 
     public void EndTurn()

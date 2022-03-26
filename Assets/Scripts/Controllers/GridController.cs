@@ -18,7 +18,7 @@ public class GridController : MonoBehaviour
 
     private float _cycleTime = 1f;
     private float _currentCycleTime = 0f;
-    private int _currentCycle = 0;
+    private int _cyclesToSimulate = 0;
     private int _liveCount = 0;
 
     private bool _gridInitialized = false;
@@ -60,7 +60,7 @@ public class GridController : MonoBehaviour
     public void StartSimulation()
     {
         _simulating = true;
-        _currentCycle = 0;
+        _cyclesToSimulate = CardGameScriptableObject.Instance.CyclesPerTurn;
         _currentCycleTime = 0f;
     }
 
@@ -92,7 +92,8 @@ public class GridController : MonoBehaviour
 
     private void Cycle()
     {
-        _currentCycle++; 
+        _cyclesToSimulate--;
+        _gridView.SetCyclesLeft(_cyclesToSimulate);
 
         HashSet<Vector2Int> liveAdjecentTilesNext = new HashSet<Vector2Int>();
         int[,] _nextTick = new int[_gridSizeX, _gridSizeY];
@@ -253,13 +254,12 @@ public class GridController : MonoBehaviour
             if (_currentCycleTime > _cycleTime)
             {
                 Cycle();
-                if (_currentCycle >= CardGameScriptableObject.Instance.CyclesPerTurn) PauseSimulation();
+
+                if (_cyclesToSimulate == 0) PauseSimulation();
                 _currentCycleTime -= _cycleTime;
             }
-            else
-            {
-                _currentCycleTime += Time.deltaTime;
-            }
+
+            _currentCycleTime += Time.deltaTime;
         }
     }
 }

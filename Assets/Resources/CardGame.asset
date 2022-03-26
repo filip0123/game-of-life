@@ -17,4 +17,11 @@ MonoBehaviour:
   _gameTurns: 6
   _turnActions: 4
   _cyclesPerTurn: 100
+  _shapeTypeCosts:
+  - _shapeType: 1
+    _actionCost: 1
+  - _shapeType: 2
+    _actionCost: 2
+  - _shapeType: 3
+    _actionCost: 3
   _player1Deck: 
