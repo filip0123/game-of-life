@@ -4,14 +4,18 @@ using TMPro;
 
 public class HandController : MonoBehaviour
 {
+    [SerializeField] private GameObject _handContainer = null;
     [SerializeField] private DeckController _deckController = null;
     [SerializeField] private CardController _cardController = null;
     [SerializeField] private TextMeshProUGUI _actionsTxt = null;
+    [SerializeField] private TextMeshProUGUI _pointsTxt = null;
 
     private int _points = 0;
     private int _actions = 0;
     private List<CardView> _cards = null;
     private bool _onTurn = true;
+
+    public GameObject HandContainer => _handContainer;
 
     public void AddCard(CardView card)
     {
@@ -37,11 +41,13 @@ public class HandController : MonoBehaviour
 
     public void TryPlay(CardView card)
     {
-        _cardController.StartDrag(card);
+       if(_onTurn) _cardController.StartDrag(card);
     }
 
     public void StartTurn(int currentTurn)
     {
+        _actions = CardGameScriptableObject.Instance.TurnActions;
+
         if(currentTurn == 0)
         {
             for (int i = 0; i < CardGameScriptableObject.Instance.StartingCards; ++i)
@@ -53,4 +59,20 @@ public class HandController : MonoBehaviour
         _deckController.Draw(this);
     }
 
+    public void EndTurn()
+    {
+        _onTurn = false;
+    }
+
+    public void AddPoints(int amount)
+    {
+        _points = _points + amount;
+        _pointsTxt.text = _points.ToString();
+    }
+
+    public void ResetPoints()
+    {
+        _points = 0;
+        _pointsTxt.text = "0";
+    }
 }
