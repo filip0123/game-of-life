@@ -16,4 +16,5 @@ MonoBehaviour:
   _startingCards: 2
   _gameTurns: 6
   _turnActions: 4
+  _cyclesPerTurn: 100
   _player1Deck: 

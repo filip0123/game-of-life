@@ -19,6 +19,7 @@ public class CardGameScriptableObject : ScriptableObject
     [SerializeField] private int _startingCards = 2;
     [SerializeField] private int _gameTurns = 6;
     [SerializeField] private int _turnActions = 4;
+    [SerializeField] private int _cyclesPerTurn = 100;
 
     [SerializeField] private List<int> _player1Deck = null;
 
@@ -26,6 +27,7 @@ public class CardGameScriptableObject : ScriptableObject
     public int StartingCards => _startingCards;
     public int GameTurns => _gameTurns;
     public int TurnActions => _turnActions;
+    public int CyclesPerTurn => _cyclesPerTurn;
 
     public List<int> Player1Deck => _player1Deck;
 }
