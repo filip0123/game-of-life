@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f26df2e6ee3c7814791e026c4c392ce3, type: 3}
   m_Name: CardGame
   m_EditorClassIdentifier: 
-  _replaceRuleOn: 0
+  _replaceRuleOn: 1
   _playerCount: 2
   _premadeDeck: 1
   _startingCards: 2

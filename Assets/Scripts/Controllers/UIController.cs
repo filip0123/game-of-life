@@ -54,10 +54,16 @@ public class UIController : MonoBehaviour
 
     private void OnRestartGame()
     {
+        _scoreboard.SetActive(false);
+
+        _buttonEndTurn.gameObject.SetActive(true);
+        _currentTurnText.gameObject.SetActive(true);
+        _playerOnTurnText.gameObject.SetActive(true);
+
         _buttonStartGame.gameObject.SetActive(false);
         _buttonRestartGame.gameObject.SetActive(true);
 
-        _gridController.ClearGrid();
+        InitializeGrid();
         _gridController.SetSimulation();
         _turnController.ResetGame();
         _deckController.Initialize();
@@ -81,7 +87,7 @@ public class UIController : MonoBehaviour
         }
 
         if (!_gridController.GridInitialized) _gridController.InitializeGrid(sizeX, sizeY);
-        else _gridController.ResizeGrid(sizeX, sizeY);
+        else if (!_gridController.ResizeGrid(sizeX, sizeY)) _gridController.ClearGrid();
     }
 
     private void OnEndGame()
@@ -90,13 +96,13 @@ public class UIController : MonoBehaviour
 
         foreach(KeyValuePair<int,int> handPoints in _turnController.GetScores())
         {
-            scoreboardText += $"Player {handPoints.Key} : {handPoints.Value}\n";
+            scoreboardText += $"Player {handPoints.Key + 1} : {handPoints.Value}\n";
         }
 
-        _buttonEndTurn.gameObject.SetActive(false);
         _scoreBoardText.text = scoreboardText;
         _scoreboard.SetActive(true);
 
+        _buttonEndTurn.gameObject.SetActive(false);
         _currentTurnText.gameObject.SetActive(false);
         _playerOnTurnText.gameObject.SetActive(false);
     }

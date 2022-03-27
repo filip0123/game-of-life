@@ -41,6 +41,7 @@ public class CardController : MonoBehaviour
         _gridController.ClearPreviews();
         _gridShapeForm = false;
         _selectedCardView.gameObject.SetActive(true);
+        _cantPlaceCursor.SetActive(false);
     }
 
     private void ResetCard()

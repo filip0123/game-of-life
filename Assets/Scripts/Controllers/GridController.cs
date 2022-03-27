@@ -46,14 +46,18 @@ public class GridController : MonoBehaviour
         SetSimulation();
     }
 
-    public void ResizeGrid(int sizeX, int sizeY)
+    public bool ResizeGrid(int sizeX, int sizeY)
     {
+        if (sizeX == _gridSizeX && sizeY == _gridSizeY) return false;
+
         _gridSizeX = sizeX;
         _gridSizeY = sizeY;
         _gameOfLifeGrid = new int[sizeX, sizeY];
         _gridView.ResizeField(sizeX, sizeY);
 
         SetSimulation();
+
+        return true;
     }
 
     public void StartSimulation()
