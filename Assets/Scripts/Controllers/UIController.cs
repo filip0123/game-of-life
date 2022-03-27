@@ -23,7 +23,9 @@ public class UIController : MonoBehaviour
     [SerializeField] Button _hideScoreboardButton = null;
     [SerializeField] GameObject _scoreboard = null;
     [SerializeField] TextMeshProUGUI _scoreBoardText = null;
-    
+
+    [SerializeField] Toggle _muteToggle = null;
+     
     public void Initialize()
     {
         _inputFieldSizeXPlaceholder.text = GameConfigScriptableObject.Instance.DefaultX.ToString();
@@ -36,6 +38,12 @@ public class UIController : MonoBehaviour
 
         _turnController.OnEndGame = OnEndGame;
         _gridController.OnSimulationOver += SetTurnText;
+
+        _muteToggle.onValueChanged.AddListener((isOn) =>
+        {
+            if (isOn) SoundController.Instance.Mute();
+            else SoundController.Instance.UnMute();
+        });
     }
 
     private void OnStartGame()
