@@ -17,19 +17,19 @@ MonoBehaviour:
   - _ID: 0
     _shapeType: 1
     _shapeName: Block
-    _cardImage: {fileID: 0}
+    _cardImage: {fileID: -1680888839915891333, guid: 988296b91d53b154b8be22b7d4a486d2, type: 3}
     _tileArrangement: 'XX
 
       XX'
   - _ID: 1
     _shapeType: 2
     _shapeName: Blinker
-    _cardImage: {fileID: 0}
+    _cardImage: {fileID: -792123183048086489, guid: 988296b91d53b154b8be22b7d4a486d2, type: 3}
     _tileArrangement: XXX
   - _ID: 2
     _shapeType: 3
     _shapeName: Glider
-    _cardImage: {fileID: 0}
+    _cardImage: {fileID: -1090606723695631386, guid: 988296b91d53b154b8be22b7d4a486d2, type: 3}
     _tileArrangement: 'XOO
 
       OXX
@@ -38,7 +38,7 @@ MonoBehaviour:
   - _ID: 3
     _shapeType: 1
     _shapeName: Beehive
-    _cardImage: {fileID: 0}
+    _cardImage: {fileID: 4213991515694518405, guid: 988296b91d53b154b8be22b7d4a486d2, type: 3}
     _tileArrangement: 'OXXO
 
       XOOX
@@ -47,14 +47,14 @@ MonoBehaviour:
   - _ID: 4
     _shapeType: 2
     _shapeName: Toad
-    _cardImage: {fileID: 0}
+    _cardImage: {fileID: -9189213504491483540, guid: 988296b91d53b154b8be22b7d4a486d2, type: 3}
     _tileArrangement: 'OXXX
 
       XXXO'
   - _ID: 5
     _shapeType: 3
     _shapeName: LWSS
-    _cardImage: {fileID: 0}
+    _cardImage: {fileID: -8857433649161303060, guid: 988296b91d53b154b8be22b7d4a486d2, type: 3}
     _tileArrangement: 'XOOXO
 
       OOOOX
