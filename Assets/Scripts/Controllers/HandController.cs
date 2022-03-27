@@ -52,8 +52,18 @@ public class HandController : MonoBehaviour
     {
         if (_onTurn && _actions >= card.Shape.Cost)
         {
-            _cardController.OnCardPlaced = () => OnCardPlace(card);
+            _cardController.OnCardPlaced = () =>
+            {
+                OnCardPlace(card);
+                SoundController.Instance.PlayClip((int)Sound.Button);
+            };
+
             _cardController.StartDrag(card, _handId);
+            SoundController.Instance.PlayClip((int)Sound.Button);
+        }
+        else
+        {
+            SoundController.Instance.PlayClip((int)Sound.Error);
         }
     }
 

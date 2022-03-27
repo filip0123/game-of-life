@@ -74,10 +74,12 @@ public class CardController : MonoBehaviour
 
         if (CanPlace())
         {
+            SoundController.Instance.PlayClip((int)Sound.Pop);
             _gridController.PreviewShape(_selectedTile.Position, _selectedCardView.Shape.LogicalTileArrangement, _selectedCardView.Shape.SizeX, _selectedCardView.Shape.SizeY);
         }
         else
         {
+            SoundController.Instance.PlayClip((int)Sound.Error);
             _cantPlaceCursor.SetActive(true);
         }
     }
