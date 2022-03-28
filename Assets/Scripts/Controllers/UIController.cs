@@ -25,6 +25,7 @@ public class UIController : MonoBehaviour
     [SerializeField] TextMeshProUGUI _scoreBoardText = null;
 
     [SerializeField] Toggle _muteToggle = null;
+    [SerializeField] Button _exitGameButton = null;
      
     public void Initialize()
     {
@@ -44,6 +45,8 @@ public class UIController : MonoBehaviour
             if (isOn) SoundController.Instance.Mute();
             else SoundController.Instance.UnMute();
         });
+
+        _exitGameButton.onClick.AddListener(Application.Quit);
     }
 
     private void OnStartGame()
