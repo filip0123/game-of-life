@@ -31,6 +31,7 @@ public class TurnController : MonoBehaviour
     {
         _gameOver = false;
 
+        _currentTurn = 0;
         _handOnTurnId = 0;
 
         foreach(HandController hand in _hands)
@@ -49,9 +50,6 @@ public class TurnController : MonoBehaviour
         }
 
         if (HandOnTurnId != _hands.Count) _hands[HandOnTurnId].EndTurn();
-
-        _currentTurn = 0;
-        _handOnTurnId = 0;
 
         StartGame();
     }

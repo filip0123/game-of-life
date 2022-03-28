@@ -10,7 +10,7 @@ public class ShapeModel
     [SerializeField] private ShapeType _shapeType;
     [SerializeField] private string _shapeName = null;
     [SerializeField] private Sprite _cardImage = null;
-    [SerializeField] [TextArea(1, 20)] private String _tileArrangement = null;
+    [SerializeField] [TextArea(1, 20)] private string _tileArrangement = null;
 
     private bool[,] _logicalTileArrangement = null;
     private int _sizeX = 0;

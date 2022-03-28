@@ -58,7 +58,8 @@ public class CardController : MonoBehaviour
 
     private void Place()
     {
-        _gridController.SetShape(_selectedTile.Position, _selectedCardView.Shape.LogicalTileArrangement, _selectedCardView.Shape.SizeX, _selectedCardView.Shape.SizeY, _selectedCardPlayerId);
+        _gridController.SetShape(_selectedTile.Position, _selectedCardView.Shape.LogicalTileArrangement, 
+            _selectedCardView.Shape.SizeX, _selectedCardView.Shape.SizeY, _selectedCardPlayerId);
 
         OnCardPlaced?.Invoke();
 
@@ -75,7 +76,8 @@ public class CardController : MonoBehaviour
         if (CanPlace())
         {
             SoundController.Instance.PlayClip((int)Sound.Pop);
-            _gridController.PreviewShape(_selectedTile.Position, _selectedCardView.Shape.LogicalTileArrangement, _selectedCardView.Shape.SizeX, _selectedCardView.Shape.SizeY);
+            _gridController.PreviewShape(_selectedTile.Position, _selectedCardView.Shape.LogicalTileArrangement, 
+                _selectedCardView.Shape.SizeX, _selectedCardView.Shape.SizeY);
         }
         else
         {
@@ -86,9 +88,11 @@ public class CardController : MonoBehaviour
 
     private bool CanPlace()
     {
-        bool canPlace = _gridController.CanSetShape(_selectedTile.Position, _selectedCardView.Shape.LogicalTileArrangement, _selectedCardView.Shape.SizeX, _selectedCardView.Shape.SizeY);
+        bool canPlace = _gridController.CanSetShape(_selectedTile.Position, _selectedCardView.Shape.LogicalTileArrangement,
+            _selectedCardView.Shape.SizeX, _selectedCardView.Shape.SizeY);
 
         _cantPlaceCursor.SetActive(!canPlace);
+
         if(!canPlace) _cantPlaceCursor.transform.position = Input.mousePosition;
         return canPlace;
     }
@@ -97,7 +101,7 @@ public class CardController : MonoBehaviour
     {
         if (_dragging)
         {
-            Transform raycast = RaycastResolver.GetRaycastTransform(Layer.Tile);
+            Transform raycast = RaycastResolver.Raycast(Layer.Tile);
             if (raycast != null && (_selectedTile == null || raycast != _selectedTile.transform))
             {
                 if (!_gridShapeForm) CardViewToGridShape();

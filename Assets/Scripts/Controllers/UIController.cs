@@ -49,32 +49,22 @@ public class UIController : MonoBehaviour
     private void OnStartGame()
     {
         InitializeGrid();
+
+        _deckController.Initialize();
         _turnController.StartGame();
         SetTurnText();
 
-        _buttonStartGame.gameObject.SetActive(false);
-        _buttonRestartGame.gameObject.SetActive(true);
-
-        _buttonEndTurn.gameObject.SetActive(true);
-        _currentTurnText.gameObject.SetActive(true);
-        _playerOnTurnText.gameObject.SetActive(true);
+        SetStartingGameUI();
     }
 
     private void OnRestartGame()
     {
-        _scoreboard.SetActive(false);
-
-        _buttonEndTurn.gameObject.SetActive(true);
-        _currentTurnText.gameObject.SetActive(true);
-        _playerOnTurnText.gameObject.SetActive(true);
-
-        _buttonStartGame.gameObject.SetActive(false);
-        _buttonRestartGame.gameObject.SetActive(true);
-
         InitializeGrid();
-        _gridController.SetSimulation();
-        _turnController.ResetGame();
+
         _deckController.Initialize();
+        _turnController.ResetGame();
+
+        SetStartingGameUI();
     }
 
     private void OnEndTurn()
@@ -88,14 +78,14 @@ public class UIController : MonoBehaviour
         int sizeX = GameConfigScriptableObject.Instance.DefaultX;
         int sizeY = GameConfigScriptableObject.Instance.DefaultY;
 
-        if (!_inputFieldSizeX.text.Equals("") && !_inputFieldSizeY.text.Equals(""))
+        if (!string.IsNullOrEmpty(_inputFieldSizeX.text) && !string.IsNullOrEmpty(_inputFieldSizeY.text))
         {
             sizeX = int.Parse(_inputFieldSizeX.text);
             sizeY = int.Parse(_inputFieldSizeY.text);
         }
 
         if (!_gridController.GridInitialized) _gridController.InitializeGrid(sizeX, sizeY);
-        else if (!_gridController.ResizeGrid(sizeX, sizeY)) _gridController.ClearGrid();
+        else if (!_gridController.ResizeGrid(sizeX, sizeY)) _gridController.ClearGrid(); //reset
     }
 
     private void OnEndGame()
@@ -118,7 +108,20 @@ public class UIController : MonoBehaviour
     private void SetTurnText()
     {
         _currentTurnText.text = (_turnController.CurrentTurn + 1).ToString();
+
         _playerOnTurnText.gameObject.SetActive(_turnController.HandOnTurnId < CardGameScriptableObject.Instance.PlayerCount);
         _playerOnTurnText.text = (_turnController.HandOnTurnId + 1).ToString();
+    }
+
+    private void SetStartingGameUI()
+    {
+        _buttonEndTurn.gameObject.SetActive(true);
+        _currentTurnText.gameObject.SetActive(true);
+        _playerOnTurnText.gameObject.SetActive(true);
+
+        _buttonStartGame.gameObject.SetActive(false);
+        _buttonRestartGame.gameObject.SetActive(true);
+
+        _scoreboard.SetActive(false);
     }
 }

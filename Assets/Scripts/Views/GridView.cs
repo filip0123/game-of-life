@@ -1,18 +1,15 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
 public class GridView : MonoBehaviour
 {
-    GridTileView _gridTilePrefab = null;
     [SerializeField] TextMeshProUGUI _cyclesLeftText = null;
     [SerializeField] Transform _bottomLeft = null;
     [SerializeField] Transform _topRight = null;
 
-    List<List<GridTileView>> _allTiles = null;
-
+    private List<List<GridTileView>> _allTiles = null;
+    private GridTileView _gridTilePrefab = null;
     private float _tileSize = 0f;
     private int _currentSizeX => _allTiles.Count;
     private int _currentSizeY => _allTiles[0].Count;

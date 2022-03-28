@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,8 +10,8 @@ public class GridController : MonoBehaviour
     private readonly int _STATE_SELECTED = (int)TileState.selected;
 
     [SerializeField] GridView _gridView = null;
-    HashSet<Vector2Int> _liveAdjecentTiles = null;
-    HashSet<Vector2Int> _previewTiles = null;
+    private HashSet<Vector2Int> _liveAdjecentTiles = null;
+    private HashSet<Vector2Int> _previewTiles = null;
 
     private int[,] _gameOfLifeGrid = null;
     private int _gridSizeX = 0;
@@ -199,8 +198,8 @@ public class GridController : MonoBehaviour
 
     public bool CanSetShape(Vector2Int targetTile, bool[,] tileShape, int tileShapeSizeX, int tileShapeSizeY)
     {
-        int gridX = 0;
-        int gridY = 0;
+        int gridX;
+        int gridY;
 
         for (int x = 0; x < tileShapeSizeX; ++x)
         {
@@ -222,8 +221,8 @@ public class GridController : MonoBehaviour
 
     public void SetShape(Vector2Int targetTile, bool[,] tileShape, int tileShapeSizeX, int tileShapeSizeY, int playerId)
     {
-        int gridX = 0;
-        int gridY = 0;
+        int gridX;
+        int gridY;
 
         int playerState = CardGameScriptableObject.Instance.GetTileState(playerId);
 
@@ -274,8 +273,6 @@ public class GridController : MonoBehaviour
 
     public void ClearGrid()
     {
-        ClearPreviews();
-
         for (int x = 0; x < _gridSizeX; ++x)
         {
             for (int y = 0; y < _gridSizeY; ++y)
@@ -284,7 +281,7 @@ public class GridController : MonoBehaviour
             }
         }
 
-        _gridView.SetActiveFields(ref _gameOfLifeGrid, _gridSizeX, _gridSizeY);
+        SetSimulation();
     }
 
     private void Update()

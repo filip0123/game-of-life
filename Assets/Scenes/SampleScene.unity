@@ -1285,7 +1285,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &363020505
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3843,7 +3843,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _gridController: {fileID: 1290861301}
   _UIController: {fileID: 1283407344}
-  _deckController: {fileID: 1494568195}
   _turnController: {fileID: 1494568194}
   _soundController: {fileID: 1494568196}
 --- !u!114 &1494568193
@@ -4715,7 +4714,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2127640867
 RectTransform:
   m_ObjectHideFlags: 0

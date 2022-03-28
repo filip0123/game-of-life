@@ -1,19 +1,17 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class SoundController : MonoBehaviour
 {
     private static SoundController _instance;
-
     public static SoundController Instance => _instance;
 
-    public AudioSource _musicSource;
-    public AudioSource _SFXSource;
+    [SerializeField] private AudioSource _musicSource;
+    [SerializeField] private AudioSource _SFXSource;
 
-    public List<AudioClip> _clips;
+    [SerializeField] private List<AudioClip> _clips;
 
-    bool _muted;
+    private bool _muted;
 
     public bool Muted { get => _muted; }
 
